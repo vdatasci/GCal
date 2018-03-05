@@ -17,7 +17,7 @@ except ImportError:
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/calendar-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Google Calendar API Python Quickstart'
 
@@ -74,5 +74,29 @@ def main():
         print(start, event['summary'])
 
 
+def add_event():
+  """Add an event using the Google Calendar API.
+
+  Creates a Google Calendar API service object
+  and creates a new event on the user's calendar.
+  """
+  credentials = get_credentials()
+  http = credentials.authorize(httplib2.Http())
+  service = discovery.build('calendar', 'v3', http=http)
+
+  body = {
+    u'status': u'confirmed',
+    u'kind': u'calendar#event',
+    u'start': {u'dateTime': u'2018-03-6T10:00:00+02:00'},
+    u'end': {u'dateTime': u'2018-03-6T10:50:00+02:00'},
+    u'summary': u'josh test event summary',
+    u'organizer': {u'self': True, u'displayName': u'Joshua Voss', u'email': u'joshuavoss777@gmail.com'},
+    u'creator': {u'self': True, u'displayName': u'Joshua Voss', u'email': u'joshuavoss777@gmail.com'}
+  }
+  service.events().insert( calendarId='primary', body=body).execute()
+
+
+
 if __name__ == '__main__':
     main()
+    add_event()
